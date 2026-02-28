@@ -19,24 +19,22 @@ html,body{
   margin:0;
   padding:0;
   background:var(--bg);
-  font-family:-apple-system,BlinkMacSystemFont,
-              "SF Pro Display","SF Pro Text",
-              system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* iPhone 17 Pro Canvas (Renderer Größe) */
 .canvas{
   width:1179px;
   height:2556px;
   display:flex;
   flex-direction:column;
-  justify-content:center;
+  justify-content:flex-start;
   align-items:center;
   background:var(--bg);
-  gap:34px;
+  padding-top:450px;
+  gap:70px;
 }
 
-/* Großes, balanced Grid */
 svg{
   display:block;
   shape-rendering:geometricPrecision;
@@ -44,16 +42,15 @@ svg{
   height:auto;
 }
 
-/* Stats unten */
 .stats{
   text-align:center;
 }
 
 .headline{
-  font-size:20px;
+  font-size:22px;
   font-weight:600;
   color:var(--text);
-  letter-spacing:.3px;
+  letter-spacing:0.2px;
   margin-bottom:10px;
 }
 
@@ -61,7 +58,7 @@ svg{
   display:flex;
   justify-content:center;
   gap:18px;
-  font-size:14px;
+  font-size:15px;
   color:var(--muted);
   flex-wrap:wrap;
 }
@@ -81,7 +78,7 @@ svg{
   <div class="stats">
     <div class="headline" id="headline"></div>
     <div class="row" id="row1"></div>
-    <div class="row" id="row2" style="margin-top:6px;"></div>
+    <div class="row" id="row2" style="margin-top:8px;"></div>
   </div>
 
 </div>
@@ -164,7 +161,6 @@ function render(){
 
   for(let r=0; r<ROWS; r++){
     for(let c=0; c<COLS; c++){
-
       const dot = document.createElementNS(NS,"circle");
       dot.setAttribute("cx", PAD + c*GAP);
       dot.setAttribute("cy", PAD + r*GAP);
