@@ -1,3 +1,5 @@
+Hier ist dein angepasstes index.html – nur die Stats unten deutlich größer, sauber proportioniert für den Lock Screen:
+
 <!doctype html>
 <html lang="de">
 <head>
@@ -19,8 +21,8 @@ html,body{
   margin:0;
   padding:0;
   background:var(--bg);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing:antialiased;
 }
 
 .canvas{
@@ -32,7 +34,7 @@ html,body{
   align-items:center;
   background:var(--bg);
   padding-top:450px;
-  gap:70px;
+  gap:80px;
 }
 
 svg{
@@ -47,25 +49,25 @@ svg{
 }
 
 .headline{
-  font-size:22px;
+  font-size:28px;
   font-weight:600;
   color:var(--text);
-  letter-spacing:0.2px;
-  margin-bottom:10px;
+  letter-spacing:0.3px;
+  margin-bottom:14px;
 }
 
 .row{
   display:flex;
   justify-content:center;
-  gap:18px;
-  font-size:15px;
+  gap:22px;
+  font-size:20px;
   color:var(--muted);
   flex-wrap:wrap;
 }
 
 .row b{
   color:var(--text);
-  font-weight:600;
+  font-weight:700;
 }
 </style>
 </head>
@@ -78,7 +80,7 @@ svg{
   <div class="stats">
     <div class="headline" id="headline"></div>
     <div class="row" id="row1"></div>
-    <div class="row" id="row2" style="margin-top:8px;"></div>
+    <div class="row" id="row2" style="margin-top:10px;"></div>
   </div>
 
 </div>
@@ -114,7 +116,6 @@ function formatNumber(n){
 }
 
 function render(){
-
   const now = new Date();
   const totalWeeks = ROWS * COLS;
 
