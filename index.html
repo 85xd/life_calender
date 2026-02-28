@@ -33,7 +33,7 @@ html,body{
   background:var(--bg);
   padding-top:450px;
   padding-bottom:520px;
-  gap:80px;
+  gap:100px;
 }
 
 svg{
@@ -48,25 +48,25 @@ svg{
 }
 
 .headline{
-  font-size:28px;
-  font-weight:600;
+  font-size:56px;
+  font-weight:800;
   color:var(--text);
-  letter-spacing:0.3px;
-  margin-bottom:14px;
+  letter-spacing:-1.5px;
+  margin-bottom:28px;
 }
 
 .row{
   display:flex;
   justify-content:center;
-  gap:22px;
-  font-size:20px;
+  gap:36px;
+  font-size:32px;
   color:var(--muted);
   flex-wrap:wrap;
 }
 
 .row b{
   color:var(--text);
-  font-weight:700;
+  font-weight:800;
 }
 </style>
 </head>
@@ -79,7 +79,7 @@ svg{
   <div class="stats">
     <div class="headline" id="headline"></div>
     <div class="row" id="row1"></div>
-    <div class="row" id="row2" style="margin-top:10px;"></div>
+    <div class="row" id="row2" style="margin-top:18px;"></div>
   </div>
 
 </div>
@@ -130,7 +130,8 @@ function render(){
     percent.toFixed(1) + "% bis 90";
 
   document.getElementById("row1").innerHTML =
-    "<span><b>" + yearsOld + "</b> Jahre <b>" + daysRemainder + "</b> Tage</span>";
+    "<span><b>" + yearsOld + "</b> Jahre</span>" +
+    "<span><b>" + daysRemainder + "</b> Tage</span>";
 
   document.getElementById("row2").innerHTML =
     "<span><b>" + formatNumber(livedWeeks) + "</b> Wochen</span>" +
