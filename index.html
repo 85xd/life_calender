@@ -32,8 +32,8 @@ html,body{
   align-items:center;
   background:var(--bg);
   padding-top:380px;
-  padding-bottom:560px;
-  gap:90px;
+  padding-bottom:760px;
+  gap:70px;
 }
 
 svg{
@@ -52,7 +52,7 @@ svg{
   font-weight:900;
   letter-spacing:-3px;
   color:var(--text);
-  margin-bottom:44px;
+  margin-bottom:36px;
 }
 
 .row{
@@ -70,21 +70,20 @@ svg{
 }
 
 .label{
-  font-size:22px;
+  font-size:20px;
   font-weight:500;
   color:var(--muted);
   margin-left:8px;
 }
 
 .secondary{
-  margin-top:34px;
+  margin-top:26px;
 }
 </style>
 </head>
 
 <body>
 <div class="canvas">
-
   <svg id="calendar"></svg>
 
   <div class="stats">
@@ -92,7 +91,6 @@ svg{
     <div class="row" id="row1"></div>
     <div class="row secondary" id="row2"></div>
   </div>
-
 </div>
 
 <script>
@@ -137,20 +135,15 @@ function render(){
   const yearsOld = Math.floor(daysOld / 365.2425);
   const daysRemainder = Math.round(daysOld - yearsOld * 365.2425);
 
-  document.getElementById("headline").textContent =
-    percent.toFixed(1) + "%";
+  document.getElementById("headline").textContent = percent.toFixed(1) + "%";
 
   document.getElementById("row1").innerHTML =
-    '<div><span class="number">' + yearsOld +
-    '</span><span class="label">Jahre</span></div>' +
-    '<div><span class="number">' + daysRemainder +
-    '</span><span class="label">Tage</span></div>';
+    '<div><span class="number">' + yearsOld + '</span><span class="label">Jahre</span></div>' +
+    '<div><span class="number">' + daysRemainder + '</span><span class="label">Tage</span></div>';
 
   document.getElementById("row2").innerHTML =
-    '<div><span class="number">' + formatNumber(livedWeeks) +
-    '</span><span class="label">Wochen</span></div>' +
-    '<div><span class="number">' + formatNumber(remainingWeeks) +
-    '</span><span class="label">Verbleibend</span></div>';
+    '<div><span class="number">' + formatNumber(livedWeeks) + '</span><span class="label">Wochen</span></div>' +
+    '<div><span class="number">' + formatNumber(remainingWeeks) + '</span><span class="label">Verbleibend</span></div>';
 
   const svg = document.getElementById("calendar");
   svg.innerHTML = "";
@@ -180,12 +173,9 @@ function render(){
       dot.setAttribute("cy", PAD + r*GAP);
       dot.setAttribute("r", radius);
 
-      if(index < livedWeeks)
-        dot.setAttribute("fill","var(--lived)");
-      else if(index === currentIndex)
-        dot.setAttribute("fill","var(--current)");
-      else
-        dot.setAttribute("fill","var(--future)");
+      if(index < livedWeeks) dot.setAttribute("fill","var(--lived)");
+      else if(index === currentIndex) dot.setAttribute("fill","var(--current)");
+      else dot.setAttribute("fill","var(--future)");
 
       svg.appendChild(dot);
       index++;
