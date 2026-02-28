@@ -3,7 +3,11 @@ name: Render Wallpaper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "5 0 * * *"   # täglich 00:05 UTC
+    # Winterzeit (MEZ)
+    - cron: "5 23 * 10-3 *"
+
+    # Sommerzeit (MESZ)
+    - cron: "5 22 * 4-9 *"
 
 permissions:
   contents: write
@@ -35,6 +39,7 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git checkout -B generated
-          git add output/wallpaper.png
+          mkdir -p output
+          git add output
           git commit -m "Update wallpaper" || echo "No changes"
           git push -f origin generated
