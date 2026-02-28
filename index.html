@@ -65,6 +65,7 @@ svg{
   color:var(--muted);
   flex-wrap:wrap;
 }
+
 .row b{
   color:var(--text);
   font-weight:600;
@@ -75,6 +76,7 @@ svg{
 <body>
 
 <div class="canvas">
+
   <svg id="calendar"></svg>
 
   <div class="stats">
@@ -82,6 +84,7 @@ svg{
     <div class="row" id="row1"></div>
     <div class="row" id="row2" style="margin-top:6px;"></div>
   </div>
+
 </div>
 
 <script>
@@ -135,7 +138,7 @@ function render(){
 
   document.getElementById("row2").innerHTML =
     "<span><b>" + formatNumber(livedWeeks) + "</b> Wochen</span>" +
-    "<span><b>" + formatNumber(remainingWeeks) + "</b> übrig</span>";
+    "<span><b>" + formatNumber(remainingWeeks) + "</b> Verbleibend</span>";
 
   const svg = document.getElementById("calendar");
   svg.innerHTML = "";
