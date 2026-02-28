@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Life Calendar</title>
+
+<style>
+:root{
+  --bg:#000000;
+  --lived:#ffffff;
+  --future:#1f1f1f;
+  --current:#ff3b30;
+  --text:#f2f2f2;
+  --muted:#9a9a9a;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,
+              "SF Pro Display","SF Pro Text",
+              system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+
+/* iPhone Pro portrait canvas */
+.canvas{
+  width:1179px;
+  height:2556px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:var(--bg);
+  gap:28px;
+}
+
+/* Grid */
+svg{
+  display:block;
+  shape-rendering:geometricPrecision;
+  width:370px;
+  height:auto;
+}
+
+/* Stats */
+.stats{
+  text-align:center;
+}
+
+.headline{
+  font-size:17px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:.2px;
+  margin-bottom:8px;
+}
+
+.row{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  font-size:12px;
+  color:var(--muted);
+  flex-wrap:wrap;
+}
+.row b{
+  color:var(--text);
+  font-weight:600;
+}
+</style>
+</head>
+
+<body>
+
+<div class="canvas">
+  <svg id="calendar"></svg>
+
+  <div class="stats">
+    <div class="headline" id="headline"></div>
+    <div class="row" id="row1"></div>
+    <div class="row" id="row2" style="margin-top:6px;"></div>
+  </div>
+</div>
+
+<script>
+const BIRTHDATE = new Date("2002-02-07T00:00:00");
+const YEARS = 90;
+const COLS = 52;
+const ROWS = YEARS;
+
+const GAP = 8;
+const DOT = 5;
+const PAD = 16;
+
+function atMidnight(d){
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function weeksBetween(a,b){
+  return Math.floor((atMidnight(b)-atMidnight(a)) / (7*24*60*60*1000));
+}
+
+function daysBetween(a,b){
+  return Math.floor((atMidnight(b)-atMidnight(a)) / (24*60*60*1000));
+}
+
+function clamp(n,min,max){
+  return Math.min(Math.max(n,min),max);
+}
+
+function formatNumber(n){
+  return new Intl.NumberFormat("de-DE").format(n);
+}
+
+function render(){
+
+  const now = new Date();
+  const totalWeeks = ROWS * COLS;
+
+  const livedWeeks = clamp(weeksBetween(BIRTHDATE, now), 0, totalWeeks);
+  const remainingWeeks = totalWeeks - livedWeeks;
+  const percent = (livedWeeks / totalWeeks) * 100;
+
+  const daysOld = daysBetween(BIRTHDATE, now);
+  const yearsOld = Math.floor(daysOld / 365.2425);
+  const daysRemainder = Math.round(daysOld - yearsOld * 365.2425);
+
+  document.getElementById("headline").textContent =
+    percent.toFixed(1) + "% bis 90";
+
+  document.getElementById("row1").innerHTML =
+    "<span><b>" + yearsOld + "</b> Jahre <b>" + daysRemainder + "</b> Tage</span>";
+
+  document.getElementById("row2").innerHTML =
+    "<span><b>" + formatNumber(livedWeeks) + "</b> Wochen</span>" +
+    "<span><b>" + formatNumber(remainingWeeks) + "</b> übrig</span>";
+
+  const svg = document.getElementById("calendar");
+  svg.innerHTML = "";
+
+  const gridW = (COLS - 1) * GAP;
+  const gridH = (ROWS - 1) * GAP;
+  const viewW = gridW + PAD*2;
+  const viewH = gridH + PAD*2;
+
+  svg.setAttribute("viewBox", "0 0 " + viewW + " " + viewH);
+
+  const NS = "http://www.w3.org/2000/svg";
+
+  const bg = document.createElementNS(NS,"rect");
+  bg.setAttribute("width", viewW);
+  bg.setAttribute("height", viewH);
+  bg.setAttribute("fill", "var(--bg)");
+  svg.appendChild(bg);
+
+  const radius = DOT/2;
+  const currentIndex = clamp(livedWeeks, 0, totalWeeks - 1);
+
+  let index = 0;
+
+  for(let r=0; r<ROWS; r++){
+    for(let c=0; c<COLS; c++){
+
+      const dot = document.createElementNS(NS,"circle");
+
+      dot.setAttribute("cx", PAD + c*GAP);
+      dot.setAttribute("cy", PAD + r*GAP);
+      dot.setAttribute("r", radius);
+
+      if(index < livedWeeks)
+        dot.setAttribute("fill", "var(--lived)");
+      else if(index === currentIndex)
+        dot.setAttribute("fill", "var(--current)");
+      else
+        dot.setAttribute("fill", "var(--future)");
+
+      svg.appendChild(dot);
+      index++;
+    }
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
