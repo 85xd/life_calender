@@ -7,8 +7,8 @@
 
 <style>
 :root{
-  --bg:#000000;
-  --lived:#ffffff;
+  --bg:#000;
+  --lived:#fff;
   --future:#1f1f1f;
   --current:#ff3b30;
   --text:#f2f2f2;
@@ -24,7 +24,7 @@ html,body{
               system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
 }
 
-/* iPhone Pro portrait canvas */
+/* iPhone 17 Pro Canvas (Renderer Größe) */
 .canvas{
   width:1179px;
   height:2556px;
@@ -33,35 +33,35 @@ html,body{
   justify-content:center;
   align-items:center;
   background:var(--bg);
-  gap:28px;
+  gap:34px;
 }
 
-/* Grid */
+/* Großes, balanced Grid */
 svg{
   display:block;
   shape-rendering:geometricPrecision;
-  width:1000px;
+  width:1050px;
   height:auto;
 }
 
-/* Stats */
+/* Stats unten */
 .stats{
   text-align:center;
 }
 
 .headline{
-  font-size:17px;
+  font-size:20px;
   font-weight:600;
   color:var(--text);
-  letter-spacing:.2px;
-  margin-bottom:8px;
+  letter-spacing:.3px;
+  margin-bottom:10px;
 }
 
 .row{
   display:flex;
   justify-content:center;
-  gap:14px;
-  font-size:12px;
+  gap:18px;
+  font-size:14px;
   color:var(--muted);
   flex-wrap:wrap;
 }
@@ -74,7 +74,6 @@ svg{
 </head>
 
 <body>
-
 <div class="canvas">
 
   <svg id="calendar"></svg>
@@ -167,17 +166,16 @@ function render(){
     for(let c=0; c<COLS; c++){
 
       const dot = document.createElementNS(NS,"circle");
-
       dot.setAttribute("cx", PAD + c*GAP);
       dot.setAttribute("cy", PAD + r*GAP);
       dot.setAttribute("r", radius);
 
       if(index < livedWeeks)
-        dot.setAttribute("fill", "var(--lived)");
+        dot.setAttribute("fill","var(--lived)");
       else if(index === currentIndex)
-        dot.setAttribute("fill", "var(--current)");
+        dot.setAttribute("fill","var(--current)");
       else
-        dot.setAttribute("fill", "var(--future)");
+        dot.setAttribute("fill","var(--future)");
 
       svg.appendChild(dot);
       index++;
