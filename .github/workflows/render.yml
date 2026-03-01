@@ -3,7 +3,7 @@ name: Render Wallpaper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 2 * * *" # täglich 02:30 UTC
+    - cron: "30 2 * * *"
 
 permissions:
   contents: write
@@ -17,23 +17,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout generated branch
         uses: actions/checkout@v4
         with:
+          ref: generated
           fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-
-      - name: Cache Playwright browsers
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright
-          restore-keys: |
-            ${{ runner.os }}-playwright-
 
       - name: Install Playwright
         run: |
@@ -48,22 +41,10 @@ jobs:
         run: node render.js
 
       - name: Commit and push updated PNG
-        env:
-          BRANCH: generated
         run: |
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git fetch origin "$BRANCH" || true
-
-          if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
-            git switch "$BRANCH"
-          elif git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
-            git switch -c "$BRANCH" --track "origin/$BRANCH"
-          else
-            git switch -c "$BRANCH"
-          fi
 
           git add output
 
@@ -73,4 +54,4 @@ jobs:
           fi
 
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-          git push origin "$BRANCH"
+          git push origin generated
