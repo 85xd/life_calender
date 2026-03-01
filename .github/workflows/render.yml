@@ -1,5 +1,5 @@
 name: Render Wallpaper
-
+# force refresh
 on:
   workflow_dispatch:
   schedule:
@@ -55,3 +55,4 @@ jobs:
 
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
           git push origin generated
+
