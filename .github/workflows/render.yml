@@ -3,7 +3,7 @@ name: Render Wallpaper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 2 * * *"
+    - cron: "30 2 * * *" # täglich 02:30 UTC
 
 permissions:
   contents: write
@@ -26,13 +26,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-playwright
           restore-keys: |
             ${{ runner.os }}-playwright-
 
@@ -53,14 +52,11 @@ jobs:
           BRANCH: generated
         run: |
           set -e
-
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # Remote-Branch holen, falls vorhanden
           git fetch origin "$BRANCH" || true
 
-          # Switch auf Branch (lokal neu erstellen, falls nicht vorhanden)
           if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
             git switch "$BRANCH"
           elif git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
@@ -77,4 +73,4 @@ jobs:
           fi
 
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-          git push origin "$BRANCH" 
+          git push origin "$BRANCH"
