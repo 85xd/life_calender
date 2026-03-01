@@ -1,9 +1,9 @@
 name: Render Wallpaper
 
 on:
-#reset
   schedule:
     - cron: "30 2 * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,11 +17,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout generated branch
+      - name: Checkout default branch
         uses: actions/checkout@v4
         with:
-          ref: generated
           fetch-depth: 0
+
+      - name: Ensure generated branch exists and checkout
+        run: |
+          set -e
+          git fetch origin --prune
+          if git ls-remote --exit-code --heads origin generated >/dev/null 2>&1; then
+            git checkout -B generated origin/generated
+          else
+            git checkout -b generated
+            git push -u origin generated
+          fi
+          git pull origin generated --rebase || true
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -45,14 +56,9 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add output
-
           if git diff --cached --quiet; then
-            echo "No changes in output/ — skipping commit."
             exit 0
           fi
-
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
           git push origin generated
-
