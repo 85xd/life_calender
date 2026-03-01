@@ -26,6 +26,15 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "npm"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
 
       - name: Install Playwright
         run: |
@@ -40,13 +49,25 @@ jobs:
         run: node render.js
 
       - name: Commit and push updated PNG
+        env:
+          BRANCH: generated
         run: |
           set -e
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git checkout -B generated
+          # Remote-Branch holen, falls vorhanden
+          git fetch origin "$BRANCH" || true
+
+          # Switch auf Branch (lokal neu erstellen, falls nicht vorhanden)
+          if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+            git switch "$BRANCH"
+          elif git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+            git switch -c "$BRANCH" --track "origin/$BRANCH"
+          else
+            git switch -c "$BRANCH"
+          fi
 
           git add output
 
@@ -56,4 +77,4 @@ jobs:
           fi
 
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-          git push -f origin generated
+          git push origin "$BRANCH"
