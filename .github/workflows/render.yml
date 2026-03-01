@@ -77,4 +77,4 @@ jobs:
           fi
 
           git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
-          git push origin "$BRANCH"
+          git push origin "$BRANCH" 
