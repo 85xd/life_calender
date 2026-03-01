@@ -3,10 +3,14 @@ name: Render Wallpaper
 on:
   workflow_dispatch:
   schedule:
--cron: "17 0 * * *"
+    - cron: "17 0 * * *" # täglich 00:17 UTC
 
 permissions:
   contents: write
+
+concurrency:
+  group: render-wallpaper
+  cancel-in-progress: true
 
 jobs:
   render:
@@ -15,6 +19,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -27,19 +33,27 @@ jobs:
           npm install playwright >/dev/null 2>&1
           npx playwright install --with-deps chromium
 
+      - name: Ensure output dir
+        run: mkdir -p output
+
       - name: Render PNG
         run: node render.js
 
       - name: Commit and push updated PNG
         run: |
+          set -e
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git checkout -B generated
 
-          mkdir -p output
           git add output
 
-          git diff --cached --quiet || git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
+          if git diff --cached --quiet; then
+            echo "No changes in output/ — skipping commit."
+            exit 0
+          fi
 
+          git commit -m "Auto-update wallpaper ($(date -u '+%Y-%m-%d %H:%M UTC'))"
           git push -f origin generated
