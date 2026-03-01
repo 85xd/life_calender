@@ -3,7 +3,7 @@ name: Render Wallpaper
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 2 * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
